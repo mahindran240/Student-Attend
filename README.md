@@ -58,19 +58,15 @@ npm run seed
 5. Run the full application:
 
 ```bash
-npm run dev
+   npm run dev
 ```
 
 The client runs at `http://localhost:5173` and the API runs at `http://localhost:5000`.
-
 ## Demo Accounts
-
 All seeded users use this password:
-
 ```text
-Password@123
+     Password@123
 ```
-
 - Student: `student@sams.edu`
 - Teacher: `teacher@sams.edu`
 - HOD: `hod@sams.edu`
