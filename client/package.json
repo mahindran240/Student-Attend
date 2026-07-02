@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "React Vite frontend for the Smart Attendance Management System.",
-  "homepage": "https://https://github.com/mahindran240/Student-Attend",
+  "homepage": "https://github.com/mahindran240/Student-Attend",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
