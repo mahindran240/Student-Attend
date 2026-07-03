@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 
-export default function useApi(request, dependencies = []) {
+export default function useApi(request, dependencies = [], skip = false) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
+    if (skip) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
     setLoading(true);
     request()
       .then((result) => {
@@ -23,7 +29,7 @@ export default function useApi(request, dependencies = []) {
     };
     // The caller owns the refresh contract for this generic request hook.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies);
+  }, [...dependencies, skip]);
 
   return { data, loading, error, setData };
 }

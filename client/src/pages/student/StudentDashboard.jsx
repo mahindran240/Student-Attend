@@ -9,20 +9,61 @@ import StatCard from "../../components/StatCard.jsx";
 import api from "../../services/api.js";
 import { exportAttendancePdf } from "../../services/exportService.js";
 import useApi from "../../hooks/useApi.js";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 export default function StudentDashboard() {
-  const { data, loading, error } = useApi(() => api.get("/dashboard/overview"), []);
-  const notifications = useApi(() => api.get("/notifications"), []);
+  const { isDemoMode } = useAuth();
+  const demoOverview = {
+    profile: {
+      rollNumber: "CSE-2026-001",
+      department: "Computer Science",
+      semester: 6,
+      section: "A"
+    },
+    stats: {
+      total: 28,
+      present: 24,
+      absent: 4,
+      percentage: 86
+    },
+    subjectWise: [
+      { subject: "Web Engineering", present: 10, absent: 1, percentage: 91 },
+      { subject: "Database Systems", present: 8, absent: 2, percentage: 80 },
+      { subject: "Operating Systems", present: 6, absent: 1, percentage: 86 }
+    ],
+    recentAttendance: [
+      { _id: "demo-1", date: "2026-06-30T00:00:00.000Z", subjectId: { name: "Web Engineering" }, status: "present", remarks: "On time" },
+      { _id: "demo-2", date: "2026-06-29T00:00:00.000Z", subjectId: { name: "Database Systems" }, status: "absent", remarks: "Medical leave" },
+      { _id: "demo-3", date: "2026-06-28T00:00:00.000Z", subjectId: { name: "Operating Systems" }, status: "present", remarks: "On time" },
+      { _id: "demo-4", date: "2026-06-27T00:00:00.000Z", subjectId: { name: "Web Engineering" }, status: "present", remarks: "On time" }
+    ],
+    pendingLeaves: 1
+  };
+  const demoNotifications = [
+    { _id: "demo-notice-1", title: "Welcome", message: "Your attendance dashboard is ready.", type: "success" },
+    { _id: "demo-notice-2", title: "Reminder", message: "Submit your leave request before Friday.", type: "info" }
+  ];
+
+  const { data, loading, error } = useApi(() => api.get("/dashboard/overview"), [], isDemoMode);
+  const notifications = useApi(() => api.get("/notifications"), [], isDemoMode);
   const [leave, setLeave] = useState({ fromDate: "", toDate: "", reason: "" });
 
   if (loading) return <LoadingSpinner label="Loading student dashboard" />;
   if (error) return <div className="panel border-red-200 bg-red-50/80 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">{error}</div>;
 
-  const stats = data?.stats || { total: 0, present: 0, absent: 0, percentage: 0 };
-  const recentAttendance = data?.recentAttendance || [];
+  const displayData = isDemoMode ? demoOverview : data;
+  const notificationItems = isDemoMode ? demoNotifications : notifications.data || [];
+  const stats = displayData?.stats || { total: 0, present: 0, absent: 0, percentage: 0 };
+  const recentAttendance = displayData?.recentAttendance || [];
 
   const submitLeave = async (event) => {
     event.preventDefault();
+    if (isDemoMode) {
+      toast.success("Leave application submitted (demo mode)");
+      setLeave({ fromDate: "", toDate: "", reason: "" });
+      return;
+    }
+
     await api.post("/leaves", leave);
     toast.success("Leave application submitted");
     setLeave({ fromDate: "", toDate: "", reason: "" });
@@ -42,7 +83,7 @@ export default function StudentDashboard() {
         <StatCard icon={CalendarCheck} label="Total Classes" value={stats.total} />
         <StatCard icon={CalendarCheck} label="Present" value={stats.present} />
         <StatCard icon={BellRing} label="Absent" value={stats.absent} accent="bg-orange-50 text-coral dark:bg-orange-950" />
-        <StatCard icon={FileText} label="Pending Leaves" value={data?.pendingLeaves || 0} />
+        <StatCard icon={FileText} label="Pending Leaves" value={displayData?.pendingLeaves || 0} />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
@@ -54,7 +95,7 @@ export default function StudentDashboard() {
         <section className="panel">
           <h2 className="section-title">Subject-wise Attendance</h2>
           <div className="mt-4">
-            <AttendanceChart items={data?.subjectWise || []} />
+            <AttendanceChart items={displayData?.subjectWise || []} />
           </div>
         </section>
       </div>
@@ -63,16 +104,16 @@ export default function StudentDashboard() {
         <section className="panel">
           <div className="mb-4 flex items-center gap-2"><UserRound size={18} className="text-ocean" /><h2 className="section-title">Profile</h2></div>
           <dl className="grid gap-3 text-sm">
-            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Roll Number</dt><dd className="font-semibold">{data?.profile?.rollNumber}</dd></div>
-            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Department</dt><dd className="font-semibold">{data?.profile?.department}</dd></div>
-            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Semester</dt><dd className="font-semibold">{data?.profile?.semester}</dd></div>
-            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Section</dt><dd className="font-semibold">{data?.profile?.section}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Roll Number</dt><dd className="font-semibold">{displayData?.profile?.rollNumber}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Department</dt><dd className="font-semibold">{displayData?.profile?.department}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Semester</dt><dd className="font-semibold">{displayData?.profile?.semester}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Section</dt><dd className="font-semibold">{displayData?.profile?.section}</dd></div>
           </dl>
         </section>
         <section className="panel">
           <div className="mb-4 flex items-center gap-2"><BellRing size={18} className="text-ocean" /><h2 className="section-title">Notifications</h2></div>
           <div className="space-y-3">
-            {(notifications.data || []).slice(0, 5).map((item) => (
+            {notificationItems.slice(0, 5).map((item) => (
               <div className="surface-muted text-sm" key={item._id}>
                 <p className="font-medium">{item.title}</p>
                 <p className="text-slate-500 dark:text-slate-400">{item.message}</p>
