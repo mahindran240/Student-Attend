@@ -16,7 +16,7 @@ export default function StudentDashboard() {
   const [leave, setLeave] = useState({ fromDate: "", toDate: "", reason: "" });
 
   if (loading) return <LoadingSpinner label="Loading student dashboard" />;
-  if (error) return <div className="panel text-red-600">{error}</div>;
+  if (error) return <div className="panel border-red-200 bg-red-50/80 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">{error}</div>;
 
   const stats = data?.stats || { total: 0, present: 0, absent: 0, percentage: 0 };
   const recentAttendance = data?.recentAttendance || [];
@@ -29,11 +29,11 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="page-shell">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Student Dashboard</h1>
-          <p className="text-sm text-slate-500">Daily, monthly, and subject-wise attendance overview.</p>
+          <h1 className="page-title">Student Dashboard</h1>
+          <p className="page-subtitle">Daily, monthly, and subject-wise attendance overview.</p>
         </div>
         <button className="btn-primary" onClick={() => exportAttendancePdf("Student Attendance Report", recentAttendance)}><Download size={18} /> Download PDF</button>
       </div>
@@ -47,12 +47,12 @@ export default function StudentDashboard() {
 
       <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
         <section className="panel">
-          <h2 className="font-semibold">Attendance Percentage</h2>
+          <h2 className="section-title">Attendance Percentage</h2>
           <CircularProgress value={stats.percentage} />
-          {stats.percentage < 75 && <p className="rounded-md bg-orange-50 p-3 text-sm text-orange-700 dark:bg-orange-950 dark:text-orange-200">Attendance is below 75%. Please attend upcoming classes regularly.</p>}
+          {stats.percentage < 75 && <p className="rounded-2xl border border-orange-200 bg-orange-50/85 p-3 text-sm font-medium text-orange-700 dark:border-orange-900/60 dark:bg-orange-950/45 dark:text-orange-200">Attendance is below 75%. Please attend upcoming classes regularly.</p>}
         </section>
         <section className="panel">
-          <h2 className="font-semibold">Subject-wise Attendance</h2>
+          <h2 className="section-title">Subject-wise Attendance</h2>
           <div className="mt-4">
             <AttendanceChart items={data?.subjectWise || []} />
           </div>
@@ -61,21 +61,21 @@ export default function StudentDashboard() {
 
       <div className="grid gap-6 xl:grid-cols-2">
         <section className="panel">
-          <div className="mb-4 flex items-center gap-2"><UserRound size={18} /><h2 className="font-semibold">Profile</h2></div>
+          <div className="mb-4 flex items-center gap-2"><UserRound size={18} className="text-ocean" /><h2 className="section-title">Profile</h2></div>
           <dl className="grid gap-3 text-sm">
-            <div className="flex justify-between"><dt className="text-slate-500">Roll Number</dt><dd>{data?.profile?.rollNumber}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Department</dt><dd>{data?.profile?.department}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Semester</dt><dd>{data?.profile?.semester}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Section</dt><dd>{data?.profile?.section}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Roll Number</dt><dd className="font-semibold">{data?.profile?.rollNumber}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Department</dt><dd className="font-semibold">{data?.profile?.department}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Semester</dt><dd className="font-semibold">{data?.profile?.semester}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Section</dt><dd className="font-semibold">{data?.profile?.section}</dd></div>
           </dl>
         </section>
         <section className="panel">
-          <div className="mb-4 flex items-center gap-2"><BellRing size={18} /><h2 className="font-semibold">Notifications</h2></div>
+          <div className="mb-4 flex items-center gap-2"><BellRing size={18} className="text-ocean" /><h2 className="section-title">Notifications</h2></div>
           <div className="space-y-3">
             {(notifications.data || []).slice(0, 5).map((item) => (
-              <div className="rounded-md bg-slate-50 p-3 text-sm dark:bg-slate-950" key={item._id}>
+              <div className="surface-muted text-sm" key={item._id}>
                 <p className="font-medium">{item.title}</p>
-                <p className="text-slate-500">{item.message}</p>
+                <p className="text-slate-500 dark:text-slate-400">{item.message}</p>
               </div>
             ))}
           </div>
@@ -83,13 +83,13 @@ export default function StudentDashboard() {
       </div>
 
       <section className="panel">
-        <h2 className="mb-4 font-semibold">Daily and Monthly Attendance</h2>
+        <h2 className="section-title mb-4">Daily and Monthly Attendance</h2>
         <DataTable
           rows={recentAttendance}
           columns={[
             { key: "date", label: "Date", render: (row) => new Date(row.date).toLocaleDateString() },
             { key: "subject", label: "Subject", render: (row) => row.subjectId?.name },
-            { key: "status", label: "Status", render: (row) => <span className="capitalize">{row.status}</span> },
+            { key: "status", label: "Status", render: (row) => <span className="badge-soft capitalize">{row.status}</span> },
             { key: "remarks", label: "Remarks" }
           ]}
         />
@@ -97,7 +97,7 @@ export default function StudentDashboard() {
 
       <div className="grid gap-6 xl:grid-cols-2">
         <form className="panel" onSubmit={submitLeave}>
-          <h2 className="font-semibold">Leave Application</h2>
+          <h2 className="section-title">Leave Application</h2>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <input className="input" type="date" value={leave.fromDate} onChange={(event) => setLeave({ ...leave, fromDate: event.target.value })} required />
             <input className="input" type="date" value={leave.toDate} onChange={(event) => setLeave({ ...leave, toDate: event.target.value })} required />
@@ -106,7 +106,7 @@ export default function StudentDashboard() {
           <button className="btn-primary mt-3">Submit Leave</button>
         </form>
         <section className="panel">
-          <div className="flex items-center gap-2"><Settings size={18} /><h2 className="font-semibold">Settings</h2></div>
+          <div className="flex items-center gap-2"><Settings size={18} className="text-ocean" /><h2 className="section-title">Settings</h2></div>
           <p className="mt-4 text-sm leading-6 text-slate-500">Use the top-right theme control to switch dark mode. Email alerts are sent when attendance needs attention.</p>
         </section>
       </div>

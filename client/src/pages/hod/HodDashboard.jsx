@@ -31,13 +31,13 @@ export default function HodDashboard() {
   }) || [];
 
   return (
-    <div className="space-y-6">
+    <div className="page-shell">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">HOD Dashboard</h1>
-          <p className="text-sm text-slate-500">Department analytics, management, reports, and low-attendance monitoring.</p>
+          <h1 className="page-title">HOD Dashboard</h1>
+          <p className="page-subtitle">Department analytics, management, reports, and low-attendance monitoring.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button className="btn-secondary" onClick={() => exportAttendancePdf("Department Monthly Report", records)}><Download size={18} /> PDF</button>
           <button className="btn-secondary" onClick={() => exportAttendanceExcel("Department Monthly Report", records)}><FileSpreadsheet size={18} /> Excel</button>
         </div>
@@ -52,24 +52,24 @@ export default function HodDashboard() {
 
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <section className="panel">
-          <h2 className="font-semibold">Attendance Analytics</h2>
+          <h2 className="section-title">Attendance Analytics</h2>
           <div className="mt-4">
             <AttendanceChart items={chartItems} />
           </div>
         </section>
         <section className="panel">
-          <h2 className="font-semibold">Department Analytics</h2>
+          <h2 className="section-title">Department Analytics</h2>
           <dl className="mt-4 grid gap-3 text-sm">
-            <div className="flex justify-between"><dt className="text-slate-500">Departments</dt><dd>{totals.departments || 0}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Active Users</dt><dd>{totals.users || 0}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Pending Leaves</dt><dd>{totals.pendingLeaves || 0}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Semesters</dt><dd>8</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Departments</dt><dd className="font-semibold">{totals.departments || 0}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Active Users</dt><dd className="font-semibold">{totals.users || 0}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Pending Leaves</dt><dd className="font-semibold">{totals.pendingLeaves || 0}</dd></div>
+            <div className="surface-muted flex justify-between"><dt className="text-slate-500 dark:text-slate-400">Semesters</dt><dd className="font-semibold">8</dd></div>
           </dl>
         </section>
       </div>
 
       <section className="panel">
-        <div className="mb-4 flex items-center gap-2"><UserPlus size={18} /><h2 className="font-semibold">Student Management</h2></div>
+        <div className="mb-4 flex items-center gap-2"><UserPlus size={18} className="text-ocean" /><h2 className="section-title">Student Management</h2></div>
         <DataTable
           rows={students.data || []}
           columns={[
@@ -83,7 +83,7 @@ export default function HodDashboard() {
       </section>
 
       <section className="panel">
-        <h2 className="mb-4 font-semibold">Teacher Management</h2>
+        <h2 className="section-title mb-4">Teacher Management</h2>
         <DataTable
           rows={teachers.data || []}
           columns={[
@@ -98,17 +98,17 @@ export default function HodDashboard() {
 
       <div className="grid gap-6 xl:grid-cols-2">
         <section className="panel">
-          <h2 className="mb-4 font-semibold">Subject Management</h2>
+          <h2 className="section-title mb-4">Subject Management</h2>
           <DataTable rows={subjects.data || []} columns={[{ key: "name", label: "Name" }, { key: "code", label: "Code" }, { key: "semester", label: "Semester" }, { key: "credits", label: "Credits" }]} />
         </section>
         <section className="panel">
-          <h2 className="mb-4 font-semibold">Semester Management</h2>
-          <DataTable rows={[1, 2, 3, 4, 5, 6, 7, 8].map((semester) => ({ semester, label: `Semester ${semester}`, status: "Active" }))} columns={[{ key: "label", label: "Semester" }, { key: "status", label: "Status" }]} />
+          <h2 className="section-title mb-4">Semester Management</h2>
+          <DataTable rows={[1, 2, 3, 4, 5, 6, 7, 8].map((semester) => ({ semester, label: `Semester ${semester}`, status: "Active" }))} columns={[{ key: "label", label: "Semester" }, { key: "status", label: "Status", render: (row) => <span className="badge-soft">{row.status}</span> }]} />
         </section>
       </div>
 
       <section className="panel">
-        <h2 className="mb-4 font-semibold">Low Attendance Students</h2>
+        <h2 className="section-title mb-4">Low Attendance Students</h2>
         <DataTable
           rows={overview.data?.lowAttendance || []}
           empty="No low-attendance students found."

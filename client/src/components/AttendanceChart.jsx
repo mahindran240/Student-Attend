@@ -10,11 +10,11 @@ export default function AttendanceChart({ items = [] }) {
       data={{
         labels,
         datasets: [
-          { label: "Present", data: items.map((item) => item.present || 0), backgroundColor: "#0f766e" },
-          { label: "Absent", data: items.map((item) => item.absent || 0), backgroundColor: "#f97316" }
+          { label: "Present", data: items.map((item) => item.present || 0), backgroundColor: "#0f766e", borderRadius: 8 },
+          { label: "Absent", data: items.map((item) => item.absent || 0), backgroundColor: "#f97316", borderRadius: 8 }
         ]
       }}
-      options={{ responsive: true, plugins: { legend: { position: "bottom" } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }}
+      options={{ responsive: true, plugins: { legend: { position: "bottom" } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: "rgba(148, 163, 184, 0.18)" } }, x: { grid: { display: false } } } }}
     />
   );
 }

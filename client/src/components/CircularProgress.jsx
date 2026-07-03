@@ -16,8 +16,8 @@ export default function CircularProgress({ value = 0 }) {
       />
       <div className="absolute inset-0 grid place-items-center text-center">
         <div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white">{safeValue}%</p>
-          <p className="text-xs text-slate-500">attendance</p>
+          <p className="text-3xl font-bold tracking-tight text-slate-950 dark:text-white">{safeValue}%</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">attendance</p>
         </div>
       </div>
     </div>

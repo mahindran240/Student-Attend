@@ -10,15 +10,15 @@ const features = [
 
 export default function Home() {
   return (
-    <div className="bg-mist text-slate-900 dark:bg-slate-950 dark:text-white">
+    <div className="min-h-screen bg-mist text-slate-900 dark:bg-slate-950 dark:text-white">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5">
-        <Link to="/" className="text-lg font-bold">Smart Attendance</Link>
+        <Link to="/" className="text-lg font-bold tracking-tight">Smart Attendance</Link>
         <Link to="/login" className="btn-primary">Login <ArrowRight size={16} /></Link>
       </header>
       <section className="mx-auto grid min-h-[78vh] max-w-7xl items-center gap-10 px-4 py-10 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
-          <p className="mb-4 inline-flex rounded-md bg-teal-50 px-3 py-1 text-sm font-semibold text-ocean dark:bg-teal-950">Built for modern departments</p>
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight sm:text-6xl">Smart Attendance Management System</h1>
+        <div className="animate-slide-up">
+          <p className="badge-soft mb-4">Built for modern departments</p>
+          <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-6xl">Smart Attendance Management System</h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
             A complete MERN platform for daily attendance, QR sessions, leave approvals, analytics, exports, and student alerts.
           </p>
@@ -27,21 +27,21 @@ export default function Home() {
             <a className="btn-secondary" href="#contact">Contact</a>
           </div>
         </div>
-        <div className="panel bg-white p-4 shadow-soft dark:bg-slate-900">
+        <div className="panel bg-white/82 p-4 shadow-soft dark:bg-slate-900/82">
           <div className="grid gap-3">
             {["Student attendance 84%", "Web Engineering QR active", "3 leave requests pending", "CSE monthly report ready"].map((item) => (
-              <div key={item} className="rounded-md border border-slate-100 bg-slate-50 p-4 font-medium dark:border-slate-800 dark:bg-slate-950">{item}</div>
+              <div key={item} className="surface-muted font-semibold text-slate-700 dark:text-slate-100">{item}</div>
             ))}
           </div>
         </div>
       </section>
-      <section className="bg-white py-16 dark:bg-slate-900" id="features">
+      <section className="border-y border-white/70 bg-white/58 py-16 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/58" id="features">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-3xl font-bold">Features</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Features</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-4">
             {features.map(({ icon: Icon, title, text }) => (
-              <div className="panel" key={title}>
-                <Icon className="text-ocean" />
+              <div className="panel group" key={title}>
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-teal-50 text-ocean transition duration-300 group-hover:scale-110 dark:bg-teal-950"><Icon /></span>
                 <h3 className="mt-4 font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{text}</p>
               </div>
@@ -57,14 +57,14 @@ export default function Home() {
           </p>
         </div>
         <form id="contact" className="panel grid gap-3">
-          <h2 className="text-2xl font-bold">Contact</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Contact</h2>
           <input className="input" placeholder="Name" />
           <input className="input" placeholder="Email" />
           <textarea className="input min-h-28" placeholder="Message" />
           <button type="button" className="btn-primary">Send Message</button>
         </form>
       </section>
-      <footer className="border-t border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800">© 2026 Smart Attendance Management System</footer>
+      <footer className="border-t border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800">&copy; 2026 Smart Attendance Management System</footer>
     </div>
   );
 }
